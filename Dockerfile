@@ -1,0 +1,21 @@
+ARG ARCH=
+FROM ${ARCH}python:3
+
+RUN apt-get update \
+    && apt-get install -y cron \
+    && apt-get autoremove -y
+
+RUN pip install --upgrade pip
+RUN pip install six
+RUN pip install domain-connect-dyndns
+
+RUN touch /var/log/domain_connect.log
+
+# Default Crontab
+RUN echo "*/1 * * * * root domain-connect-dyndns --config /settings/settings.txt --all update  >> /var/log/domain_connect.log 2>&1" > /etc/cron.d/domain_connect
+
+# Default settings
+RUN mkdir settings
+RUN echo "{}" > /settings/settings.txt
+
+CMD cron && tail -f /var/log/domain_connect.log
