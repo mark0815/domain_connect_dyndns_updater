@@ -14,11 +14,11 @@ jobs:
         id: buildx
         uses: crazy-max/ghaction-docker-buildx@v1
         with:
-          version: latest
+          version: buildx-version
       - name: login to docker hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: build the image
         run: |
-          docker buildx build \
+          docker buildx build --push \
             --tag mark0815/domain_connect_dyndns_updater:latest \
             --platform linux/amd64,linux/arm/v7,linux/arm64 .
