@@ -12,7 +12,7 @@ RUN pip install domain-connect-dyndns
 RUN touch /var/log/domain_connect.log
 
 # Default Crontab
-RUN echo "*/1 * * * * root domain-connect-dyndns --config /settings/settings.txt --all update  >> /var/log/domain_connect.log 2>&1" > /etc/cron.d/domain_connect
+RUN echo "*/1 * * * * root /usr/local/bin/domain-connect-dyndns --config /settings/settings.txt --all update  >> /var/log/domain_connect.log 2>&1" > /etc/cron.d/domain_connect
 
 # Default settings
 RUN mkdir settings

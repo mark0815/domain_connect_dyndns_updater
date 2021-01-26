@@ -2,7 +2,6 @@
 
 ```
 docker run \
-    -v config:/config \
-    -v config:/settings \
+    -v settings:/settings \
     mark0815/domain_connect_dyndns_updater:latest
 ```
