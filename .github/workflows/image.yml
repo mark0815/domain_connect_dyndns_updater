@@ -20,6 +20,19 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: build the image
         run: |
-          docker buildx build --push \
+          docker buildx build \
+            --tag mark0815/domain_connect_dyndns_updater:${{ github.sha }} \
             --tag mark0815/domain_connect_dyndns_updater:latest \
             --platform linux/amd64,linux/arm/v7,linux/arm64 .
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "docker.io/mark0815/domain_connect_dyndns_updater:${{ github.sha }}"
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
+      - name: push the image
+        run: |
+          docker push --all-tags mark0815/domain_connect_dyndns_updater:latest
