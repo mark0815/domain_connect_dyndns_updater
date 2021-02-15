@@ -20,7 +20,7 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: build the image
         run: |
-          docker buildx build \
+          docker buildx build --push \
             --tag mark0815/domain_connect_dyndns_updater:${{ github.sha }} \
             --tag mark0815/domain_connect_dyndns_updater:latest \
             --platform linux/amd64,linux/arm64 .
@@ -33,6 +33,3 @@ jobs:
           ignore-unfixed: true
           vuln-type: "os,library"
           severity: "CRITICAL,HIGH"
-#      - name: push the image
-#        run: |
-#          docker push --all-tags mark0815/domain_connect_dyndns_updater:latest
