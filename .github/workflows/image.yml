@@ -33,6 +33,6 @@ jobs:
           ignore-unfixed: true
           vuln-type: "os,library"
           severity: "CRITICAL,HIGH"
-      - name: push the image
-        run: |
-          docker push --all-tags mark0815/domain_connect_dyndns_updater:latest
+#      - name: push the image
+#        run: |
+#          docker push --all-tags mark0815/domain_connect_dyndns_updater:latest
