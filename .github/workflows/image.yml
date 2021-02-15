@@ -23,7 +23,7 @@ jobs:
           docker buildx build \
             --tag mark0815/domain_connect_dyndns_updater:${{ github.sha }} \
             --tag mark0815/domain_connect_dyndns_updater:latest \
-            --platform linux/amd64,linux/arm/v7,linux/arm64 .
+            --platform linux/amd64,linux/arm64 .
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
