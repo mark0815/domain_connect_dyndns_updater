@@ -3,7 +3,7 @@ FROM ${ARCH}python:3
 
 RUN apt-get update \
     && apt-get install -y cron \
-    && apt-get autoremove -y
+    && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip
 RUN pip install six
