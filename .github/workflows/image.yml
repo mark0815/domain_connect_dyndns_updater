@@ -1,6 +1,7 @@
 name: build our image
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -9,16 +10,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout code
+      - name: Checkout
         uses: actions/checkout@v2
-      - name: install buildx
+      - name: Set up Docker Buildx
         id: buildx
-        uses: crazy-max/ghaction-docker-buildx@v1
-        with:
-          buildx-version: latest
-      - name: login to docker hub
+        uses: docker/setup-buildx-action@v1
+      - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-      - name: build the image
+      - name: Build and push the image
         run: |
           docker pull mark0815/domain_connect_dyndns_updater:latest || true
           docker buildx build --push \
