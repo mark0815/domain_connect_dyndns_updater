@@ -12,23 +12,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          image: tonistiigi/binfmt:latest
+          platforms: arm64,amd64
       - name: Set up Docker Buildx
-        id: buildx
         uses: docker/setup-buildx-action@v1
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-      - name: Build and push the image
-        run: |
-          docker pull mark0815/domain_connect_dyndns_updater:latest || true
-          docker buildx build --push \
-            --tag mark0815/domain_connect_dyndns_updater:${{ github.sha }} \
-            --tag mark0815/domain_connect_dyndns_updater:latest \
-            --cache-from mark0815/domain_connect_dyndns_updater:latest \
-            --platform linux/amd64,linux/arm64 .
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/domain_connect_dyndns_updater:${{ github.sha }},
+            ${{ secrets.DOCKER_USERNAME }}/domain_connect_dyndns_updater:latest
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "docker.io/mark0815/domain_connect_dyndns_updater:${{ github.sha }}"
+          image-ref: "docker.io/${{ secrets.DOCKER_USERNAME }}/domain_connect_dyndns_updater:${{ github.sha }}"
           format: "table"
           exit-code: "1"
           ignore-unfixed: true
