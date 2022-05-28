@@ -41,6 +41,12 @@ jobs:
           ignore-unfixed: true
           vuln-type: "os,library"
           severity: "CRITICAL,HIGH"
+      - name: Run Snyk to check Docker image for vulnerabilities
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          image: "docker.io/${{ secrets.DOCKER_USERNAME }}/domain_connect_dyndns_updater:${{ github.sha }}"
       - name: Push
         uses: docker/build-push-action@v3
         with:
