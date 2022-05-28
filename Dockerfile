@@ -2,6 +2,7 @@ ARG ARCH=
 FROM ${ARCH}python:slim
 
 RUN apt-get update \
+    && apt-get upgrade -y \
     && apt-get install -y cron \
     && rm -rf /var/lib/apt/lists/*
 
